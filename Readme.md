@@ -2,7 +2,7 @@
 
 # Notes
 - **In this lab we are targeting a time-trial model**. You can get a reasonable time-trial model within 120 minutes of training.
--  Join us in the **[AWS DeepRacer Women’s League Slack Community](https://deepracer-community.slack.com/)** for discussions with the community or post your questions to the [AWS DeepRacer forum](https://forums.aws.amazon.com/forum.jspa?forumID=318).
+-  Join us in the **[AWS DeepRacer Women’s League Slack Community](https://aws-ml-community.slack.com/join/shared_invite/zt-g38gcuo1-0~3afqYi8XYJOnSFk1vDBw#/)** for discussions with the community or post your questions to the [AWS DeepRacer forum](https://forums.aws.amazon.com/forum.jspa?forumID=318).
 - If you want to continue learning after the lab, please check out the following:
 	- [reInvent 2019 Expert Boot Camp videos](http://bit.ly/DRBootCamp) from our community experts
 	- online video course by the AWS Training and Certification team **[AWS DeepRacer: Driven by Reinforcement Learning](http://bit.ly/DeepRacerVideoCourse)**
@@ -33,7 +33,7 @@ The lab will provide detail on the various components in the AWS DeepRacer servi
 # Housekeeping
 - **Please use the AWS Educate account provided to you to train your models**
 - For those eager to start training a job, our advice would be take your time and familiarize yourself with the concepts first, before starting model training.
-- Please ask questions in the slack channel as you progress through the lab and feel free to have discussions at your table.
+- Please ask questions in the slack channel as you progress through the lab
 - <font color=blue>**Info**</font> buttons. Throughout the console you will see <font color=blue>**Info**</font> buttons. When selected, an information pane will slide onto the screen from the right of the window. Info buttons will not navigate away from the current page, unless you select a link in the information pane. You can close the panes once you are done.
 
 
@@ -55,67 +55,9 @@ While the stack is being created we can call out items in the left-hand navigati
 - **Models**: View your list of models, create new models, or clone existing models.
 - **Garage**: You can now customize your own virtual cars by experimenting with different sensor combinations and neural network selections. This is also where you specify the action space for your car.
 
-Let's dive into the Garage first, as this is where we will customize the car we will use during model training. Please expand the left hand navigation bar and select **Garage**.
+Let's dive directly into creating a model, click on **Models** link to get to the models page.
 
-## Step 2: Garage
-When you visit the **Garage** for the first time you will be presented with an overview of the Garage, which you can revisit using the Info bar on the right. The Garage allows you to create and customize your own virtual cars that you will then use to train models for. By default ,the Garage contains the **The Original DeepRacer**. The original DeepRacer uses a single front-facing camera, a 3 layer convolutional neural network, and a maximum speed action space of 1m/s.
-
-Note: If you have used AWS DeepRacer before, the action space speeds have been updated to provide a closer match to real world speeds. A quick rule of thumb is to take your old model's speed and divide it by 3. This gets you to the current console value.
-
-![Build new vehicle](img/garage_car_created.png)
-
-Select the "Build a new vehicle" button.
-
-### 2.1 Mod your own vehicle
-
-![Garage step 1](img/garage_step_1.png)
-
-In this page you can select the sensor combination for your car, and also the neural network that will be trained when training your model. The sensors provide additional inputs to your model about the environment, and have different pros and cons. Depending on your race type you may opt for a simple sensor and shallow network, whereas more complex challenges like head-to-head racing may need more complex sensors and a deeper network that can learn more complex features and behaviors.
-
-- If you want to race in a single car on track time-trial race consider using the single camera. To race around a track without other cars or obstacles you don't need a complex input, furthermore, the more complex you go the longer training will take.
-- Consider using a stereo camera sensor when you want to build an object avoidance model or head-to-head racing model. You will need to use the reward function in such a way that the model learns the depth features from your images, something that is doable with stereo cameras. Note that in head-to-head racing models, stereo cameras may not be enough to cover blind spots.
-- Consider adding LIDAR to your models if you want to engage in head-to-head racing. The LIDAR sensor is rear-facing and scans to about 0.5m from the car. It will detect cars approaching from behind or in blind spots on the turns.
-
-Please select only **Camera** as sensor and **3 Layer CNN** as Neural Network.
-
-Please select **Next**.
-
-### 2.2 Action space
-
-![Garage step 2](img/garage_step_2.png)
-
-In this section you get to configure the action space that your model will use during training. Once the model has been trained with a specific action space, you can't change the action space in the console as this is the last layer of the network, specifically the number of output nodes. An action is a combination of speed and steering angle. In AWS DeepRacer we are using a discrete action space as opposed to a continuous action space. To build this discrete action space you will specify the maximum steering angle, the steering angle granularity, the maximum speed, and the speed granularity. The action space inputs are:
-
-- Maximum steering angle is the maximum angle in degrees that the front wheels of the car can turn, to the left and to the right. There is a limit as to how far the wheels can turn and so the maximum turning angle is 30 degrees. **Please set Maximum steering angle to 30 degrees**.
-- Steering granularity refers to the number of steering intervals between the maximum steering angle on either side.  Thus if your maximum steering angle is 30 degrees, then +30 degrees is to the left and -30 degrees is to the right. With a steering granularity of 5, the following steering angles, from left to right, will be in the action space: 30 degrees, 15 degrees, 0 degrees, -15 degrees, and -30 degrees. Steering angles are always symmetrical around 0 degrees. **Please set steering angle granularity to 5**.
-- Maximum speeds refers to the maximum speed the car will drive in the simulator as measured in meters per second. **Please set maximum speed to 1m/s**. Note that faster speeds take longer to train. See images below
-- Speed granularity refers to the number of speed levels from the maximum speed (including) to zero (excluding). So if your maximum speed is 3 m/s and your speed granularity is 3, then your action space will contain speed settings of 1 m/s, 2m/s, and 3 m/s. Simply put 3m/s divide by 3 equals 1m/s increments, so go from 0m/s (excluded) to 3m/s in increments of 1m/s. **Please set speed granularity to 3**.
-
-Based on the above example the final action space will include 15 discrete actions labeled 0 to 14, (3 speeds x 5 steering angles), that should be listed in the AWS DeepRacer service. If you haven't done so please configure your action space. Feel free to use what you want to use taking note of the following hints:
-
-- Your model will not perform an action that is not in the action space.
-- Your model needs to be trained to use an action. In other words don't expect your model to be able to take corners, if you train it on a straight track.  
-- Specifying a fast speed or a wide steering angle is great, but you still need to think about your reward function and whether it makes sense to drive full-speed into a turn, or exhibit zig-zag behavior on a straight section of the track.
-- Our experiments have shown that models with a faster maximum speed take longer to converge than those with a slower maximum speed. Please see observations in the hyperparameter section below if you do go with a speed faster than 1m/s.
-- You also have to keep physics in mind. If you try train a model at faster than 3 m/s, you may see your car spin out on corners, which will increase the time to convergence of your model.
-
-
-Please select **Next**.
-
-### 2.3 Customize vehicle name and appearance
-
-![Garage step 3](img/garage_step_3.png)
-
-Specify the name for your new vehicle and choose your vehicle's trim.
-
-Please select **Done**.
-You should now be back in the Garage and see your vehicle.
-
-![Build new vehicle](img/garage_car_created.png)
-
-Please expand the left-hand nav bar and select **Models**.
-
-## Step 3: Model List Page
+## Step 2: Model List Page
 The **Models** page shows a list of all the models you have created and the status of each model. If you want to create models, this is where you start the process. Similarly, from this page you can download, clone, and delete models. If this is the first time you are using the service and have just created your resources, you should see a few sample models in your account.
 
 ![Model List Page](img/model_list.png)
@@ -124,15 +66,14 @@ You can create a model by selecting **Create model**. Once you have created a mo
 
 To create your model select **Create model**.
 
-
-## Step 4: Create model
+## Step 3: Create model
 This page gives you the ability to create an RL model for AWS DeepRacer and start training the model. We are going to create a model that can be used by the AWS DeepRacer car to autonomously drive around a virtual race track. We need to select the specific race track we want to train on, specify the reward function that will be used to incentivize our desired driving behavior during training, configure hyperparameters, and specify our stopping conditions.
 
 ![Model Name](img/create_model_1_model_name.png)
 
-### 4.1 Model name and race track
+### 3.1 Model name and race track
 
-#### 4.1.1 Model name
+#### 3.1.1 Model name
 Please provide a name for your model e.g. MyFirstModel.
 
 #### 4.1.2 Race track
@@ -145,27 +86,25 @@ Scroll down and **please oval track** from the Environment Simulation section. T
 
 Scroll down and select **Next**.
 
-### 4.2 Race type, and agent
+### 3.2 Race type, and agent
 
 ![Race type](img/race_type.png)
 
-#### 4.2.1 Race type
+#### 3.2.1 Race type
 
 On this screen you can select your racing type. As mentioned in the Notes above in this lab we will focus on training a time-trial model.
 
 Please select **Time-trial**.
 
-#### 4.2.2 Agent
+#### 3.2.2 Agent
 
-Please choose the vehicle you want to train with. Note by selecting the vehicle you implicitly select the sensor configuration, action space, and neural network topology associated with that vehicle. For the race we recommend selecting a vehicle with max speed of 1m/s if you don't want to tweak hyperparameters in the next screen. If you do select a vehicle with a high maximum speed, be prepared for a longer training time and also to tweak your hyperparameters.
-
-**Important to note** that once you have started training a model using a particular agent (car), the settings of the agent remains with the model, even if you go and change the agent in the Garage. Thus changes to your agents will not affect your existing models, but will only affect future models that you start training. We will call this out again later.
+Please choose **The Original DeepRacer** as your agent.
 
 Scroll down and select **Next**.
 
-### 4.3 Reward function, training algorithm and hyperparameters, and stop conditions
+### 3.3 Reward function, training algorithm and hyperparameters, and stop conditions
 
-#### 4.3.1 Reward function
+#### 3.3.1 Reward function
 
 In reinforcement learning, the reward function plays a **critical** role in training your models. The reward function provides the logic that tells your agent how good or bad an outcome was by assigning a value to it. These rewards are used in the training algorithm, which optimizes the model to choose actions that lead to the maximum expected cumulative rewards. The reward function is used during training to incentivize the driving behavior you want the agent to exhibit when you ultimately stop training the model and race it.
 
@@ -316,18 +255,16 @@ Once you are done creating your reward function be sure to use the **Validate** 
 
 Scroll down and select **Next**.
 
-#### 4.3.2 Training algorithm and hyperparameters
+#### 3.3.2 Training algorithm and hyperparameters
 
 ![Training algorithm and hyperparameters](img/hyperparameters.png)
 
 
-##### 4.3.2.1 Training algorithm
-
+##### 3.3.2.1 Training algorithm
 
 For the time being you can only use the PPO (Proximal Policy Optimization) algorithm in the console.
 
-##### 4.3.2.2 Hyperparameters (formerly called algorithm settings)
-
+##### 3.3.2.2 (Optional section) Hyperparameters
 
 This section specifies the hyperparameters that will be used by the reinforcement learning algorithm during training. Hyperparameters are used to improve training performance.
 
@@ -358,19 +295,7 @@ The default parameters work well for time-trial models where the max speed is le
 | Loss type                                | The loss type specified the type of the objective function (cost function) used to update the network weights. The Huber and Mean squared error loss types behave similarly for small updates. But as the updates become larger, the Huber loss takes smaller increments compared to the Mean squared error loss. When you have convergence problems, use the Huber loss type. When convergence is good and you want to train faster, use the Mean squared error loss type.                                                                                                      |
 | Number of episodes between each training |  This parameter controls how much experience the car should obtain between each model training iteration. For more complex problems which have more local maxima, a larger experience buffer is necessary to provide more uncorrelated data points. In this case, training will be slower but more stable. The recommended values are 10, 20 and 40.                           |
 
-#### Observations: playing with max speed and hyperparameters to get convergence
-
-The faster you set the maximum speed, the longer your model will take to train. Furthermore, in some high speed models you may have to start tweaking your hyperparameters in order to get to convergence. The following charts shows you the average track progress (solid line) and per episode track progress (dots) made across as measured in episodes, across various training jobs. The idea is that you want the progress your car makes to increase over time, which shows that the model is improving. If progress doesn't improve over time (flat lines) consider changing your reward function, action space, and/or hyperparameters.
-
-![Speed vs hyperparams 1](img/progress_crop.png)
-
-
-The takeaway here is that when you use a larger learning rate (0.001) vs the default (0.0003), your model will train faster, as the updates to the neural network weights (those weights that are changed as we try to optimize the policy to get maximum expected cumulative reward) are larger. However, based on the above (very simplistic experiments) it seems that you have to train in smaller batch sizes to make better use of the larger learning rate.
-
-
-Note that after each training iteration we will save the new model file to your S3 bucket. The AWS DeepRacer service will not show all models trained during a training run, just the last model. We will look at these in Section 3.
-
-#### 4.3.3 Stop conditions
+#### 3.3.3 Stop conditions
 
 This is the last section before you start training. Here you can specify the maximum time your model will train for. Ideally you should put a number in this condition. You can always stop training early. Furthermore, if your model stopped as a result of the condition, you can go to the model list screen, and clone your model to restart training using new parameters.
 
@@ -392,7 +317,7 @@ Once you have a trained model, you need to submit it to this race in the [consol
 
 Monitor your standing on the leaderboard and use the below section to improve your position on the leaderboard to qualify for the next round.
 
-# Section 3: Model training and improving your model
+# Section 3: Model training and improving your model (Optional Section - use this section to improve your position on the leaderboard)
 
 ## 3.1: While your model is training
 
