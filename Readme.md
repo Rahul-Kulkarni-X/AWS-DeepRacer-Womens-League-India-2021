@@ -305,7 +305,7 @@ Note 25 to 35 minutes of lab time should have elapsed by this point.
 
 ## 2.1 2021 AWS DeepRacer Women’s League - India
 
-Once you have a trained model, you need to submit the model to this race using the [console](https://tiny.amazon.com/h1bv95wc/Regional). Your model will then be evaluated by the AWS DeepRacer service on the indicated competition track. After your model has been evaluated you will see your standing update if your lap time was better than your prior submission.
+Once you have a trained model, you need to submit the model to this race using the console. Your model will then be evaluated by the AWS DeepRacer service on the indicated competition track. After your model has been evaluated you will see your standing update if your lap time was better than your prior submission.
 
 **Congratulations, you have successfully submitted a model to the AWS DeepRacer Women’s League!**
 
