@@ -20,7 +20,7 @@ The lab is split into three sections:
 
 - Section 1: Training your first time-trial model,
 - Section 2: Preparing for the AWS DeepRacer Women’s League - India 2021 race, and
-- Section 3: Model training and improving your model.
+- Section 3: Model training and improving your model. (Optional section and use this to improve your standing in the leaderboard)
 
 Goals one and two are covered in Section 1, goal three is covered in Section 2, and goal four is covered in Section 3.
 
@@ -76,7 +76,7 @@ This page gives you the ability to create an RL model for AWS DeepRacer and star
 #### 3.1.1 Model name
 Please provide a name for your model e.g. MyFirstModel.
 
-#### 4.1.2 Race track
+#### 3.1.2 Race track
 
 When training a model, keep the track on which you want to race in mind. Train on the track most similar to the final track you intend to race on. While this isn't required and doesn't guarantee a good model, it will maximize the odds that your model will get its best performance on the race track. Furthermore, if you train on a straight track, don't expect your model to learn how to turn.
 
@@ -311,7 +311,7 @@ Note 25 to 35 minutes of lab time should have elapsed by this point.
 
 ## 2.1 2021 AWS DeepRacer Women’s League - India
 
-Once you have a trained model, you need to submit it to this race in the [console](https://tiny.amazon.com/h1bv95wc/Regional). Your model will then be evaluated by the AWS DeepRacer service on the indicated competition track. After your model has been evaluated you will see your standing update if your lap time was better than your prior submission.
+Once you have a trained model, you need to submit the model to this race using the [console](https://tiny.amazon.com/h1bv95wc/Regional). Your model will then be evaluated by the AWS DeepRacer service on the indicated competition track. After your model has been evaluated you will see your standing update if your lap time was better than your prior submission.
 
 **Congratulations, you have successfully submitted a model to the AWS DeepRacer Women’s League!**
 
@@ -319,7 +319,65 @@ Monitor your standing on the leaderboard and use the below section to improve yo
 
 # Section 3: Model training and improving your model (Optional Section - use this section to improve your position on the leaderboard)
 
-## 3.1: While your model is training
+## 3.1: Increase the speed of your car
+
+Visit the **Garage** page to do this. When you visit the **Garage** page for the first time you will be presented with an overview of the Garage, which you can revisit using the Info bar on the right. The Garage allows you to create and customize your own virtual cars that you will then use to train models for. By default ,the Garage contains the **The Original DeepRacer**. The original DeepRacer uses a single front-facing camera, a 3 layer convolutional neural network, and a maximum speed action space of 1m/s.
+
+Note: If you have used AWS DeepRacer before, the action space speeds have been updated to provide a closer match to real world speeds. A quick rule of thumb is to take your old model's speed and divide it by 3. This gets you to the current console value.
+
+![Build new vehicle](img/garage_car_created.png)
+
+Select the "Build a new vehicle" button.
+
+### 3.1.1 Modify your own vehicle
+
+![Garage step 1](img/garage_step_1.png)
+
+In this page you can select the sensor combination for your car, and also the neural network that will be trained when training your model. The sensors provide additional inputs to your model about the environment, and have different pros and cons. Depending on your race type you may opt for a simple sensor and shallow network, whereas more complex challenges like head-to-head racing may need more complex sensors and a deeper network that can learn more complex features and behaviors.
+
+- If you want to race in a single car on track time-trial race consider using the single camera. To race around a track without other cars or obstacles you don't need a complex input, furthermore, the more complex you go the longer training will take.
+- Consider using a stereo camera sensor when you want to build an object avoidance model or head-to-head racing model. You will need to use the reward function in such a way that the model learns the depth features from your images, something that is doable with stereo cameras. Note that in head-to-head racing models, stereo cameras may not be enough to cover blind spots.
+- Consider adding LIDAR to your models if you want to engage in head-to-head racing. The LIDAR sensor is rear-facing and scans to about 0.5m from the car. It will detect cars approaching from behind or in blind spots on the turns.
+
+Please select only **Camera** as sensor and **3 Layer CNN** as Neural Network.
+
+Please select **Next**.
+
+### 3.1.2 Action space
+
+![Garage step 2](img/garage_step_2.png)
+
+In this section you get to configure the action space that your model will use during training. Once the model has been trained with a specific action space, you can't change the action space in the console as this is the last layer of the network, specifically the number of output nodes. An action is a combination of speed and steering angle. In AWS DeepRacer we are using a discrete action space as opposed to a continuous action space. To build this discrete action space you will specify the maximum steering angle, the steering angle granularity, the maximum speed, and the speed granularity. The action space inputs are:
+
+- Maximum steering angle is the maximum angle in degrees that the front wheels of the car can turn, to the left and to the right. There is a limit as to how far the wheels can turn and so the maximum turning angle is 30 degrees. **Please set Maximum steering angle to 30 degrees**.
+- Steering granularity refers to the number of steering intervals between the maximum steering angle on either side.  Thus if your maximum steering angle is 30 degrees, then +30 degrees is to the left and -30 degrees is to the right. With a steering granularity of 5, the following steering angles, from left to right, will be in the action space: 30 degrees, 15 degrees, 0 degrees, -15 degrees, and -30 degrees. Steering angles are always symmetrical around 0 degrees. **Please set steering angle granularity to 5**.
+- Maximum speeds refers to the maximum speed the car will drive in the simulator as measured in meters per second. **Please set maximum speed to 2m/s**. Note that since you have increased the speed, you will need to train the model a little longer. See images below
+- Speed granularity refers to the number of speed levels from the maximum speed (including) to zero (excluding). So if your maximum speed is 3 m/s and your speed granularity is 3, then your action space will contain speed settings of 1 m/s, 2m/s, and 3 m/s. Simply put 3m/s divide by 3 equals 1m/s increments, so go from 0m/s (excluded) to 3m/s in increments of 1m/s. **Please set speed granularity to 3**.
+
+Based on the above example the final action space will include 15 discrete actions labeled 0 to 14, (3 speeds x 5 steering angles), that should be listed in the AWS DeepRacer service. If you haven't done so please configure your action space. Feel free to use what you want to use taking note of the following hints:
+
+- Your model will not perform an action that is not in the action space.
+- Your model needs to be trained to use an action. In other words don't expect your model to be able to take corners, if you train it on a straight track.  
+- Specifying a fast speed or a wide steering angle is great, but you still need to think about your reward function and whether it makes sense to drive full-speed into a turn, or exhibit zig-zag behavior on a straight section of the track.
+- Our experiments have shown that models with a faster maximum speed take longer to converge than those with a slower maximum speed. Please see observations in the hyperparameter section below if you do go with a speed faster than 1m/s.
+- You also have to keep physics in mind. If you try train a model at faster than 3 m/s, you may see your car spin out on corners, which will increase the time to convergence of your model.
+
+
+Please select **Next**.
+
+### 3.1.3 Customize vehicle name and appearance
+
+![Garage step 3](img/garage_step_3.png)
+
+Specify the name for your new vehicle and choose your vehicle's trim.
+
+Please select **Done**.
+You should now be back in the Garage and see your vehicle.
+
+![Build new vehicle](img/garage_car_created.png)
+
+
+## 3.2: While your model is training
 
 After you have clicked create model in section 1 step 4, your model will start training and you should see the following:
 
@@ -380,7 +438,7 @@ The interim models are stored as .pd files in a folder called DeepRacer-SageMake
 
 The AWS DeepRacer service can at the time of writing only reference one final model for each training job. However, should you want to swap out the model trained during the final training iteration, with any model trained in the training iterations running up to the final, you can simple swap out the model.pb file in the final model.tar.gz file. Note that you should not change the other files in the .tar.gz as this may render the model useless. Do this after your model has stopped training, or after you manually stopped training.
 
-## 3.2: Evaluating the performance of your model
+## 3.3: Evaluating the performance of your model
 
 You may not have time in the workshop to do from step 2 onwards. Once your model training is complete you can start model evaluation. From your model details page, where you observed training, select **Start evaluation**. You can now select the track on which you want to evaluate the performance of your model and also the number of laps. Select the re:Invent 2018 track and 5 laps and select Start.
 
@@ -388,7 +446,7 @@ Once done you should see something as follows.
 
 ![evaluation_done](img/evaluationdone.png)
 
-## 3.3: Iterating and improving your model
+## 3.4: Iterating and improving your model
 
 Based on the evaluation of the model you should have a good idea as to whether your model can complete the track reliably, and what the average lap time is. Note that for the Virtual Circuit races you will have to complete a certain number of laps consecutively with your model, and so focus on building a reliable model. The number of laps will be determined race by race.
 
@@ -400,7 +458,7 @@ Hints:
 - Tweak your reward function to incentivize your car to drive faster : you’ll want to specifically modify progress, steps and speed variables.
 - Clone your model to leverage training experience. Please note that you will not be able to change action space once a model is cloned, otherwise the job will fail.
 
-## 3.4: Analyze model performance by inspecting the RoboMaker logs
+## 3.5: Analyze model performance by inspecting the RoboMaker logs
 If you do want to go a step further, you can evaluate the performance of each model that was trained during the training job by inspecting the log file.
 
 To download the log file from CloudWatch you can use the following code with [Amazon CLI](https://docs.aws.amazon.com/polly/latest/dg/setup-aws-cli.html).  
@@ -415,6 +473,7 @@ To download the log file from CloudWatch you can use the following code with [Am
 
 You can now analyze the log file using Python Pandas and see which model iterations provided the highest total reward. Furthermore, if you did add a finish bonus, you can see which model iterations were able to finish a lap. These models are good candidates to test in the simulator and in the real world.
 
-## 3.5: Race in the AWS DeepRacer League
+
+## 3.6: Race in the AWS DeepRacer League
 
 If you are happy with your model you can go race in the [Summit Circuit](https://aws.amazon.com/deepracer/summit-circuit/) or in the [Virtual Circuit](https://console.aws.amazon.com/deepracer/home?region=us-east-1#leaderboards). You can submit your trained model into the Virtual Circuit's current open race [here](https://console.aws.amazon.com/deepracer/home?region=us-east-1#leaderboards).
