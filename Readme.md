@@ -24,12 +24,6 @@ The lab is split into three sections:
 
 Goals one and two are covered in Section 1, goal three is covered in Section 2, and goal four is covered in Section 3.
 
-# Timing
-**You will have 50 minutes to complete the lab** and this is enough time to thoroughly go through the content, explore the service, and start training your first AWS DeepRacer reinforcement learning (RL) model. Section 1 should take about 25 to 35 minutes, Section 2 should take about 5 minutes, and Section 3 will take more time than you have in the workshop but is for use at home.
-
-The lab will provide detail on the various components in the AWS DeepRacer service in the console and you will get the chance to try them all out. **You should start training your model at the end of Section 1.**
-
-
 # Housekeeping
 - **Please use the AWS Educate account provided to you to train your models**
 - For those eager to start training a job, our advice would be take your time and familiarize yourself with the concepts first, before starting model training.
