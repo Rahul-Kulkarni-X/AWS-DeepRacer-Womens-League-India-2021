@@ -25,7 +25,7 @@ The lab is split into three sections:
 Goals one and two are covered in Section 1, goal three is covered in Section 2, and goal four is covered in Section 3.
 
 # Housekeeping
-- **Please use the AWS Educate account provided to you to train your models**
+- **Please use the AWS Educate account to train your models. To set up and access your AWS Educate account, please use the instructions specified in an email sent to your inbox from apj-educate@amazon.com**
 - For those eager to start training a job, our advice would be take your time and familiarize yourself with the concepts first, before starting model training.
 - Please ask questions in the slack channel as you progress through the lab
 - <font color=blue>**Info**</font> buttons. Throughout the console you will see <font color=blue>**Info**</font> buttons. When selected, an information pane will slide onto the screen from the right of the window. Info buttons will not navigate away from the current page, unless you select a link in the information pane. You can close the panes once you are done.
@@ -305,11 +305,13 @@ Note 25 to 35 minutes of lab time should have elapsed by this point.
 
 ## 2.1 2021 AWS DeepRacer Women’s League - India
 
-Once you have a trained model, you need to submit the model to this race using the console. Your model will then be evaluated by the AWS DeepRacer service on the indicated competition track. After your model has been evaluated you will see your standing update if your lap time was better than your prior submission.
+**Once you have a trained model, you need to submit the model to a community race specific to your region. The details of the community race for your region has been sent over an email to your registered email address. Please check for an email from support@awsdeepracerleague.in for all the details**
+
+Your model will then be evaluated by the AWS DeepRacer service. After your model has been evaluated you will see your standing on the leaderboard.
 
 **Congratulations, you have successfully submitted a model to the AWS DeepRacer Women’s League!**
 
-Monitor your standing on the leaderboard and use the below section to improve your position on the leaderboard to qualify for the next round.
+As next steps, monitor your standing on the leaderboard and use the below section to improve your position on the leaderboard to qualify for the next round.
 
 # Section 3: Model training and improving your model (Optional Section - use this section to improve your position on the leaderboard)
 
