@@ -25,7 +25,7 @@ The lab is split into three sections:
 Goals one and two are covered in Section 1, goal three is covered in Section 2, and goal four is covered in Section 3.
 
 # Housekeeping
-- **Please use the AWS Educate account to train your models. To set up and access your AWS Educate account, please refer the instructions sent to you via email to your registered email address. Look for an email from apj-educate@amazon.com for all the details. If you need help, please reach out to us on the **[AWS DeepRacer Women’s League Slack Community](https://aws-ml-community.slack.com/join/shared_invite/zt-g38gcuo1-0~3afqYi8XYJOnSFk1vDBw#/)**
+- **Please use the AWS Educate account to train your models. To set up and access your AWS Educate account, please refer the instructions sent to you via email to your registered email address. Look for an email from apj-educate@amazon.com for all the details. If you need help, please reach out to us on the [AWS DeepRacer Women’s League Slack Community](https://aws-ml-community.slack.com/join/shared_invite/zt-g38gcuo1-0~3afqYi8XYJOnSFk1vDBw#/)**
 - For those eager to start training a job, our advice would be take your time and familiarize yourself with the concepts first, before starting model training.
 - Please ask questions in the slack channel as you progress through the lab
 - <font color=blue>**Info**</font> buttons. Throughout the console you will see <font color=blue>**Info**</font> buttons. When selected, an information pane will slide onto the screen from the right of the window. Info buttons will not navigate away from the current page, unless you select a link in the information pane. You can close the panes once you are done.
